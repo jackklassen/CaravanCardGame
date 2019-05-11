@@ -144,5 +144,17 @@ public class Caravan {
 	public void EmptyCaravan() {
 		CaravanStack.empty();
 	}
+	
+	/**
+	 * Overloaded toString Method.
+	 */
+	public String toString() {
+		String ReturnString = null;
+		Integer NewTotalValue =TotalValue;
+		
+		ReturnString = NewTotalValue.toString() + " " + LastCardPlayed + " " + Direction;
+		
+		return ReturnString;
+	}
 
 }

@@ -20,7 +20,7 @@ public class CaravanGUI {
 	private JButton Card4;
 	private JButton Card5;
 	
-	private static JButton Caravan1;
+	private JButton Caravan1;
 	private JButton Caravan2;
 	private JButton Caravan3;
 
@@ -32,8 +32,9 @@ public class CaravanGUI {
 	 */
 
 	/**
-	 * TODO: set each card button to a card when card button is clicked set it as
-	 * active card then when the user clicks the caravan add card to caravan
+	 * TODO: 
+	 * Create ToString methods for Cards And Caravans
+	 * Remove a card and put a new one in the same place
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -139,7 +140,7 @@ public class CaravanGUI {
 		frame.getContentPane().add(Card5);
 	}
 	/**
-	 * set up the Caravan Gui
+	 * set up the inital Caravan Gui
 	 */
 	public void SetGameUp() {
 		PlayerObj.CreateDeck(30);
@@ -149,18 +150,21 @@ public class CaravanGUI {
 		
 		
 		SetHand();
+		SetCaravan();
 		
-		/**
-		 * set up the caravan buttons
-		 * 
-		 */
 	}
 	public void SetHand() {
-		Card1.setText(PlayerObj.Hand.get(0).getCardType());
-		Card2.setText(PlayerObj.Hand.get(1).getCardType());
-		Card3.setText(PlayerObj.Hand.get(2).getCardType());
-		Card4.setText(PlayerObj.Hand.get(3).getCardType());
-		Card5.setText(PlayerObj.Hand.get(4).getCardType());
+		Card1.setText(PlayerObj.Hand.get(0).toString());
+		Card2.setText(PlayerObj.Hand.get(1).toString());
+		Card3.setText(PlayerObj.Hand.get(2).toString());
+		Card4.setText(PlayerObj.Hand.get(3).toString());
+		Card5.setText(PlayerObj.Hand.get(4).toString());
+	}
+	
+	public void SetCaravan() {
+		Caravan1.setText(PlayerObj.PlayerCaravan1.toString());
+		Caravan2.setText(PlayerObj.PlayerCaravan2.toString());
+		Caravan3.setText(PlayerObj.PlayerCaravan3.toString());
 	}
 	
 	public void AddToCaravan(int CaravanNum) {
@@ -183,6 +187,7 @@ public class CaravanGUI {
 		SetHand();
 		this.frame.revalidate();
 		this.frame.repaint();
+		ClickedCard = null;
 	}
 
 }

@@ -89,4 +89,17 @@ public class Card {
 		return CardValue;
 
 	}
+	/**
+	 * Overloaded toString Method.
+	 */
+	
+	public String toString() {
+		String ReturnString = null;
+		
+		ReturnString = CardType +" "+ Suit + " "+ Colour;
+		
+		
+		return ReturnString;
+		
+	}
 }

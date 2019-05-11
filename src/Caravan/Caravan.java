@@ -93,15 +93,18 @@ public class Caravan {
 	}
 
 	/**
-	 * 
+	 * Method to Add the Card Given to the Caravan Selected
 	 * @param NewCard
 	 * 
 	 */
-	public void AddToCaravan(Card NewCard) {
+	public Boolean AddToCaravan(Card NewCard) {
+		Boolean AddSuccess = false;
+		
 		if (CaravanStack.size() == 0) {
 			CaravanStack.add(NewCard);
 			TotalValue += NewCard.GetCardValue();
 			LastCardPlayed = NewCard;
+			AddSuccess = true;
 		}
 
 		if (CaravanStack.size() == 1) {
@@ -113,14 +116,15 @@ public class Caravan {
 				Direction = "ASC";
 			}
 			System.out.println(Direction);
-
 		}
+		
 		if (CheckPlayable(NewCard)) {
 			CaravanStack.add(NewCard);
 			TotalValue += NewCard.GetCardValue();
 			LastCardPlayed = NewCard;
+			AddSuccess = true;
 		}
-
+		return AddSuccess;
 	}
 
 	/**
@@ -150,7 +154,7 @@ public class Caravan {
 	 */
 	public String toString() {
 		String ReturnString = null;
-		Integer NewTotalValue =TotalValue;
+		Integer NewTotalValue = TotalValue;
 		
 		ReturnString = NewTotalValue.toString() + " " + LastCardPlayed + " " + Direction;
 		

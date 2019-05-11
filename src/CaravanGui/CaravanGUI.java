@@ -63,7 +63,7 @@ public class CaravanGUI {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 368, 267);
+		frame.setBounds(100, 100, 419, 267);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
@@ -73,7 +73,7 @@ public class CaravanGUI {
 		 		AddToCaravan(1);
 		 	}
 		 });
-		Caravan1.setBounds(21, 37, 89, 89);
+		Caravan1.setBounds(10, 37, 114, 89);
 		frame.getContentPane().add(Caravan1);
 
 		 Caravan2 = new JButton("New button");
@@ -82,16 +82,16 @@ public class CaravanGUI {
 		 		AddToCaravan(2);
 		 	}
 		 });
-		Caravan2.setBounds(120, 37, 89, 89);
+		Caravan2.setBounds(134, 37, 111, 89);
 		frame.getContentPane().add(Caravan2);
 
 		 Caravan3 = new JButton("New button");
 		 Caravan3.addActionListener(new ActionListener() {
 		 	public void actionPerformed(ActionEvent e) {
-		 		AddToCaravan(2);
+		 		AddToCaravan(3);
 		 	}
 		 });
-		Caravan3.setBounds(219, 37, 89, 89);
+		Caravan3.setBounds(255, 37, 112, 89);
 		frame.getContentPane().add(Caravan3);
 
 		 Card1 = new JButton("New button");
@@ -109,7 +109,7 @@ public class CaravanGUI {
 		 		ClickedCard = PlayerObj.Hand.get(1);
 		 	}
 		 });
-		Card2.setBounds(120, 140, 89, 23);
+		Card2.setBounds(145, 140, 89, 23);
 	    frame.getContentPane().add(Card2);
 
 		 Card4 = new JButton("New button");
@@ -127,7 +127,7 @@ public class CaravanGUI {
 		 		ClickedCard = PlayerObj.Hand.get(2);
 		 	}
 		 });
-		Card3.setBounds(219, 140, 89, 23);
+		Card3.setBounds(265, 140, 89, 23);
 		frame.getContentPane().add(Card3);
 
 		 Card5 = new JButton("New button");
@@ -136,7 +136,7 @@ public class CaravanGUI {
 		 		ClickedCard = PlayerObj.Hand.get(4);
 		 	}
 		 });
-		Card5.setBounds(120, 174, 89, 23);
+		Card5.setBounds(145, 174, 89, 23);
 		frame.getContentPane().add(Card5);
 	}
 	/**
@@ -168,26 +168,34 @@ public class CaravanGUI {
 	}
 	
 	public void AddToCaravan(int CaravanNum) {
+		boolean AddSuccess = false; 
+		
 		switch(CaravanNum) {
 		case(1):
-			PlayerObj.PlayerCaravan1.AddToCaravan(ClickedCard);
+			AddSuccess = PlayerObj.PlayerCaravan1.AddToCaravan(ClickedCard);
 			break;
 		case(2):
-			PlayerObj.PlayerCaravan2.AddToCaravan(ClickedCard);
+			AddSuccess = PlayerObj.PlayerCaravan2.AddToCaravan(ClickedCard);
 			break;
 		case(3):
-			PlayerObj.PlayerCaravan1.AddToCaravan(ClickedCard);
+			AddSuccess = PlayerObj.PlayerCaravan3.AddToCaravan(ClickedCard);
 			break;
+		
 		}
 		System.out.println(CaravanNum);
-		
+		if(AddSuccess == true) {
 		PlayerObj.Hand.remove(ClickedCard);
 		PlayerObj.Hand.add(PlayerObj.PlayerDeck.Deck.pop());
 		
 		SetHand();
+		SetCaravan();
 		this.frame.revalidate();
 		this.frame.repaint();
 		ClickedCard = null;
+		}
+		else if(AddSuccess == false) {
+			System.out.println("Card Can not be added to caravan.");
+		}
 	}
 
 }

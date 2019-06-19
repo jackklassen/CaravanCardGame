@@ -6,6 +6,7 @@ import java.util.List;
 public class Player {
 	public List<Card> Hand = new ArrayList<Card>();
 	public Deck PlayerDeck = new Deck();
+	public boolean PlayerHasWon = false;
 	public Caravan PlayerCaravan1 = new Caravan();
 	public Caravan PlayerCaravan2 = new Caravan();
 	public Caravan PlayerCaravan3 = new Caravan();

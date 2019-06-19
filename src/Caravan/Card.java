@@ -5,7 +5,7 @@ public class Card {
 	private String Colour;
 	private String Suit;
 	private String CardType;
-	private String AceHighLow = "High";
+	private String AceHighLow = "Low";
 
 	public Card(String colour, String suit, String cardType) {
 		Colour = colour;

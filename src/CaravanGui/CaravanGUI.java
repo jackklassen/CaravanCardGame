@@ -36,11 +36,12 @@ public class CaravanGUI {
 	 * 
 	 * add proper rule https://fallout.fandom.com/wiki/Caravan_(game)
 	 */
-	public static void main(String[] args) {
+	// public static void main(String[] args) {
+	public static void NewScreen(String Name) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CaravanGUI window = new CaravanGUI();
+					CaravanGUI window = new CaravanGUI(Name);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -57,6 +58,14 @@ public class CaravanGUI {
 		initialize();
 		SetGameUp();
 		this.frame.setTitle("Caravan");
+
+	}
+	
+	public CaravanGUI(String Name) {
+
+		initialize();
+		SetGameUp();
+		this.frame.setTitle(Name);
 
 	}
 

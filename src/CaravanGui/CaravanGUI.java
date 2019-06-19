@@ -33,6 +33,8 @@ public class CaravanGUI {
 	/**
 	 * TODO: Create ToString methods for Cards And Caravans Remove a card and put a
 	 * new one in the same place
+	 * 
+	 * add proper rule https://fallout.fandom.com/wiki/Caravan_(game)
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {

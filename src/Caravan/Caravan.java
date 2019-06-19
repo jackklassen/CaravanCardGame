@@ -5,6 +5,8 @@ import java.util.Stack;
 public class Caravan {
 	private Stack<Card> CaravanStack = new Stack<Card>();
 	private Card LastCardPlayed;
+	private int MinWinValue = 21;
+	private int MinLossValue = 27;
 	private int TotalValue = 0;
 	private String Direction; // caravan must be going up in value or down in value the second card played in
 								// a caravan determines this
@@ -77,7 +79,7 @@ public class Caravan {
 	 * @return true if the Player has won
 	 */
 	public boolean CheckWin() {
-		if (TotalValue == 30)
+		if (TotalValue > MinWinValue && TotalValue < MinLossValue)
 			return true;
 		return false;
 	}
@@ -87,24 +89,29 @@ public class Caravan {
 	 * @return true if the player has Lost
 	 */
 	public boolean CheckLoss() {
-		if (TotalValue > 30)
+		if (TotalValue >= MinLossValue)
 			return true;
 		return false;
 	}
 
 	/**
 	 * Method to Add the Card Given to the Caravan Selected
+	 * 
 	 * @param NewCard
 	 * 
 	 */
 	public Boolean AddToCaravan(Card NewCard) {
 		Boolean AddSuccess = false;
-		
+
 		if (CaravanStack.size() == 0) {
-			CaravanStack.add(NewCard);
-			TotalValue += NewCard.GetCardValue();
-			LastCardPlayed = NewCard;
-			AddSuccess = true;
+			if (!CheckFace(NewCard)) {
+				CaravanStack.add(NewCard);
+				TotalValue += NewCard.GetCardValue();
+				LastCardPlayed = NewCard;
+				AddSuccess = true;
+			} else if (CheckFace(NewCard)) {
+				AddFace(NewCard);
+			}
 		}
 
 		if (CaravanStack.size() == 1) {
@@ -115,9 +122,9 @@ public class Caravan {
 			if (CaravanStack.peek().GetCardValue() < NewCard.GetCardValue()) {
 				Direction = "ASC";
 			}
-			System.out.println(Direction);
+			// System.out.println(Direction);
 		}
-		
+
 		if (CheckPlayable(NewCard)) {
 			CaravanStack.add(NewCard);
 			TotalValue += NewCard.GetCardValue();
@@ -125,6 +132,22 @@ public class Caravan {
 			AddSuccess = true;
 		}
 		return AddSuccess;
+	}
+	/**
+	 * check if the newcard is an ace or any other face card
+	 * @param NewCard
+	 * @return
+	 */
+
+	public boolean CheckFace(Card NewCard) {
+		if (NewCard.getCardType() != "A" && NewCard.GetCardValue() > 10)
+			return true;
+		else
+			return false;
+	}
+	
+	public void AddFace(Card NewCard) {
+		
 	}
 
 	/**
@@ -148,16 +171,16 @@ public class Caravan {
 	public void EmptyCaravan() {
 		CaravanStack.empty();
 	}
-	
+
 	/**
 	 * Overloaded toString Method.
 	 */
 	public String toString() {
 		String ReturnString = null;
 		Integer NewTotalValue = TotalValue;
-		
+
 		ReturnString = NewTotalValue.toString() + " " + LastCardPlayed + " " + Direction;
-		
+
 		return ReturnString;
 	}
 

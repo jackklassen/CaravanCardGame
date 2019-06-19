@@ -133,8 +133,10 @@ public class Caravan {
 		}
 		return AddSuccess;
 	}
+
 	/**
 	 * check if the newcard is an ace or any other face card
+	 * 
 	 * @param NewCard
 	 * @return
 	 */
@@ -145,9 +147,88 @@ public class Caravan {
 		else
 			return false;
 	}
-	
+
 	public void AddFace(Card NewCard) {
-		
+		switch (NewCard.getCardType()) {
+		case "JO":
+			PlayJoker(NewCard);
+			break;
+		case "J":
+			PlayJack(NewCard);
+			break;
+		case "Q":
+			PlayQueen(NewCard);
+			break;
+		case "K":
+			PlayKing(NewCard);
+			break;
+
+		}
+	}
+
+	/**
+	 * double add the same value as the last value card played
+	 * 
+	 * @param newCard
+	 */
+	private void PlayKing(Card newCard) {
+		// TODO Auto-generated method stub
+		for (Card c : CaravanStack) {
+			// check if last valuecard played
+			// possibly add a new variable lastvaluecard played and mabye store its location
+			// in the stack
+		}
+	}
+
+	/**
+	 * swap the direction of the caravan
+	 * 
+	 * @param newCard
+	 */
+	private void PlayQueen(Card newCard) {
+		if (Direction == "ASC") {
+			Direction = "DSC";
+		} else if (Direction == "DSC") {
+			Direction = "ASC";
+		}
+
+		LastCardPlayed = newCard;
+		CaravanStack.add(newCard);
+	}
+
+	/**
+	 * remove the top Value card and any face cards attached to it
+	 * 
+	 * @param newCard
+	 */
+	private void PlayJack(Card newCard) {
+		while (CheckFace(CaravanStack.peek())) {
+			CaravanStack.pop();
+			if (!CheckFace(CaravanStack.peek())) {
+				TotalValue = TotalValue - CaravanStack.pop().GetCardValue();
+			}
+		}
+
+	}
+
+	private void PlayJoker(Card newCard) {
+		if (LastCardPlayed.getCardType() == "A") {
+			for (Card c : CaravanStack) {
+				if (c.getSuit() == LastCardPlayed.getSuit()) {
+					CaravanStack.remove(c);
+				}
+			}
+		} else if (!CheckFace(LastCardPlayed)) {
+			for (Card c : CaravanStack) {
+				if (c.equals(LastCardPlayed))
+					break;
+
+				else if (c.equals(LastCardPlayed.GetCardValue()))
+					CaravanStack.remove(c);
+
+			}
+		}
+
 	}
 
 	/**

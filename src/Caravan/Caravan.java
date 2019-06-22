@@ -5,12 +5,13 @@ import java.util.Stack;
 public class Caravan {
 	private Stack<Card> CaravanStack = new Stack<Card>();
 	private Card LastCardPlayed;
+	private Card LastValueCardPlayed;
 	private int MinWinValue = 21;
 	private int MinLossValue = 27;
 	private int TotalValue = 0;
 	public boolean CaravanWon = false;
 	public boolean CaravanLost = false;
-	private String Direction; // caravan must be going up in value or down in value the second card played in
+	private String Direction= ""; // caravan must be going up in value or down in value the second card played in
 								// a caravan determines this
 
 	public Card getLastCardPlayed() {
@@ -52,15 +53,17 @@ public class Caravan {
 	 */
 	public boolean CheckDirection(Card NextCard) {
 		if (Direction == "DSC") {
-			if (NextCard.GetCardValue() <= LastCardPlayed.GetCardValue()) {
+			if (NextCard.GetCardValue() <= LastValueCardPlayed.GetCardValue()) {
 				return true;
-			} else if (Direction == "ASC") {
-				if (NextCard.GetCardValue() >= LastCardPlayed.GetCardValue()) {
-					return true;
-				}
 			}
-
+		} else if (Direction == "ASC") {
+			if (NextCard.GetCardValue() >= LastValueCardPlayed.GetCardValue()) {
+				return true;
+			}
+		} else if (CheckFace(NextCard)) {
+			return true;
 		}
+
 		return false;
 	}
 
@@ -71,7 +74,7 @@ public class Caravan {
 	 *         Color.
 	 */
 	public boolean CheckColour(Card NextCard) {
-		if (NextCard.getColour() == LastCardPlayed.getColour())
+		if (NextCard.getColour() == LastValueCardPlayed.getColour())
 			return false;
 		return true;
 	}
@@ -94,7 +97,7 @@ public class Caravan {
 	 */
 	public boolean CheckLoss() {
 		if (TotalValue >= MinLossValue) {
-			CaravanLost = true;	
+			CaravanLost = true;
 			return true;
 		}
 		return false;
@@ -114,9 +117,8 @@ public class Caravan {
 				CaravanStack.add(NewCard);
 				TotalValue += NewCard.GetCardValue();
 				LastCardPlayed = NewCard;
+				LastValueCardPlayed = NewCard;
 				AddSuccess = true;
-			} else if (CheckFace(NewCard)) {
-				AddFace(NewCard);
 			}
 		}
 
@@ -130,12 +132,17 @@ public class Caravan {
 			}
 			// System.out.println(Direction);
 		}
-
-		if (CheckPlayable(NewCard)) {
-			CaravanStack.add(NewCard);
-			TotalValue += NewCard.GetCardValue();
-			LastCardPlayed = NewCard;
+		if (CheckFace(NewCard)) {
+			AddFace(NewCard);
 			AddSuccess = true;
+		} else if (!CheckFace(NewCard)) {
+			if (CheckPlayable(NewCard)) {
+				CaravanStack.add(NewCard);
+				TotalValue += NewCard.GetCardValue();
+				LastCardPlayed = NewCard;
+				LastValueCardPlayed = NewCard;
+				AddSuccess = true;
+			}
 		}
 		return AddSuccess;
 	}
@@ -177,22 +184,28 @@ public class Caravan {
 	 * 
 	 * @param newCard
 	 */
-	private void PlayKing(Card newCard) {
-		// TODO Auto-generated method stub
-		int HighestCardValue = 0;
-		for (Card c : CaravanStack) {
-			if (!CheckFace(c)) {
-				HighestCardValue = c.GetCardValue();
-			}
+	/*
+	 * private void PlayKing(Card newCard) {
+	 * 
+	 * int HighestCardValue = 0; for (Card c : CaravanStack) { if (!CheckFace(c)) {
+	 * HighestCardValue = c.GetCardValue(); }
+	 * 
+	 * TotalValue += HighestCardValue;
+	 * 
+	 * LastCardPlayed = newCard; CaravanStack.add(newCard); // check if last
+	 * valuecard played // possibly add a new variable lastvaluecard played and
+	 * mabye store its location // in the stack } }
+	 */
 
-			TotalValue += HighestCardValue;
+	private boolean PlayKing(Card newCard) {
 
+		if (!CheckFace(LastCardPlayed)) {
+			TotalValue += LastCardPlayed.GetCardValue();
 			LastCardPlayed = newCard;
 			CaravanStack.add(newCard);
-			// check if last valuecard played
-			// possibly add a new variable lastvaluecard played and mabye store its location
-			// in the stack
+			return true;
 		}
+		return false;
 	}
 
 	/**
@@ -200,7 +213,7 @@ public class Caravan {
 	 * 
 	 * @param newCard
 	 */
-	private void PlayQueen(Card newCard) {
+	private boolean PlayQueen(Card newCard) {
 		if (Direction == "ASC") {
 			Direction = "DSC";
 		} else if (Direction == "DSC") {
@@ -209,6 +222,7 @@ public class Caravan {
 
 		LastCardPlayed = newCard;
 		CaravanStack.add(newCard);
+		return true;
 	}
 
 	/**
@@ -227,7 +241,7 @@ public class Caravan {
 		CaravanStack.add(newCard);
 	}
 
-	private void PlayJoker(Card newCard) {
+	private boolean PlayJoker(Card newCard) {
 		if (LastCardPlayed.getCardType() == "A") {
 			for (Card c : CaravanStack) {
 				if (c.getSuit() == LastCardPlayed.getSuit()) {
@@ -243,11 +257,13 @@ public class Caravan {
 					CaravanStack.remove(c);
 
 			}
+		} else if (CheckFace(LastCardPlayed)) {
+			return false;
 		}
 
 		LastCardPlayed = newCard;
 		CaravanStack.add(newCard);
-
+		return true;
 	}
 
 	/**
@@ -282,6 +298,37 @@ public class Caravan {
 		ReturnString = NewTotalValue.toString() + " " + LastCardPlayed + " " + Direction;
 
 		return ReturnString;
+	}
+	/**
+	 * 
+	 * @return Total Value in String form
+	 */
+	public String GetTotalValueStr() {
+		String ReturnString = null;
+		Integer NewTotalValue = TotalValue;
+
+		ReturnString = NewTotalValue.toString();
+
+		return ReturnString;
+	}
+	
+	
+	/**
+	 * Methods to return the information needed to the GUI
+	 * @return
+	 */
+	public String GetDirection() {
+		return Direction;
+	}
+	public Card GetLastCardPlayed() {
+		return LastCardPlayed;
+	}
+	public Card GetLastValueCardPlayed() {
+		return LastValueCardPlayed;
+		
+	}
+	public int GetTotalValue() {
+		return TotalValue;
 	}
 
 }

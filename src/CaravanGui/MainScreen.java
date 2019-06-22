@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import Caravan.*;
 
 public class MainScreen {
 
@@ -42,7 +43,7 @@ public class MainScreen {
 		frame.setBounds(100, 100, 129, 255);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
+
 		JButton btnTwoPlayer = new JButton("Two Player");
 		btnTwoPlayer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -51,7 +52,7 @@ public class MainScreen {
 		});
 		btnTwoPlayer.setBounds(10, 49, 101, 23);
 		frame.getContentPane().add(btnTwoPlayer);
-		
+
 		JButton btnSinglePlayer = new JButton("Single Player");
 		btnSinglePlayer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -61,23 +62,37 @@ public class MainScreen {
 		btnSinglePlayer.setBounds(10, 83, 101, 23);
 		frame.getContentPane().add(btnSinglePlayer);
 	}
+
 	public void RunOnePlayer() {
 		CaravanGUI Player1 = new CaravanGUI();
-		Player1.NewScreen("Player");
+		Player1.NewScreen("Caravan");
+		Player1.TwoPlayers = false;
 	}
-	
+
 	/**
 	 * mangage two human players
 	 */
 	public void RunTwoPlayers() {
+		boolean GameDone = false;
+		//while (!GameDone) {
+		CaravanGUI Game = new CaravanGUI();
 		
-		CaravanGUI Player1 = new CaravanGUI();
-		Player1.NewScreen("Player1");
-		
-		
-		CaravanGUI Player2 = new CaravanGUI();
-		Player2.NewScreen("Player2");
-		
-		
+			Player Player1 = new Player();
+			Player Player2 = new Player();
+			
+			Player1.SetGameUp();
+			Player2.SetGameUp();
+			
+			Game.TwoPlayers = true;
+			
+			Game.Player2 = Player2;
+			Game.NewScreen("Caravan");
+			
+			//Game.ChangePlayer(Player2);
+			
+			
+			
+		//}
+
 	}
 }

@@ -54,5 +54,10 @@ public class Player {
 
 		return PlayedCard;
 	}
+	
+	public void SetGameUp() {
+		CreateDeck(30);
+		FillHand();
+	}
 
 }

@@ -84,6 +84,8 @@ public class Card {
 			return 12;
 		case "K":
 			return 13;
+		case "JO":
+			return 14;
 
 		}
 		return CardValue;

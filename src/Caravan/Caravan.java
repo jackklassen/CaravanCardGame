@@ -11,8 +11,8 @@ public class Caravan {
 	private int TotalValue = 0;
 	public boolean CaravanWon = false;
 	public boolean CaravanLost = false;
-	private String Direction= ""; // caravan must be going up in value or down in value the second card played in
-								// a caravan determines this
+	private String Direction = ""; // caravan must be going up in value or down in value the second card played in
+									// a caravan determines this
 
 	public Card getLastCardPlayed() {
 		return LastCardPlayed;
@@ -119,7 +119,8 @@ public class Caravan {
 				LastCardPlayed = NewCard;
 				LastValueCardPlayed = NewCard;
 				AddSuccess = true;
-			}
+			} else if (CheckFace(NewCard))
+				AddSuccess = false;
 		}
 
 		if (CaravanStack.size() == 1) {
@@ -132,17 +133,20 @@ public class Caravan {
 			}
 			// System.out.println(Direction);
 		}
-		if (CheckFace(NewCard)) {
-			AddFace(NewCard);
-			AddSuccess = true;
-		} else if (!CheckFace(NewCard)) {
-			if (CheckPlayable(NewCard)) {
-				CaravanStack.add(NewCard);
-				TotalValue += NewCard.GetCardValue();
-				LastCardPlayed = NewCard;
-				LastValueCardPlayed = NewCard;
+		if (CaravanStack.size() >= 1) {
+			if (CheckFace(NewCard)) {
+				AddFace(NewCard);
 				AddSuccess = true;
+			} else if (!CheckFace(NewCard)) {
+				if (CheckPlayable(NewCard)) {
+					CaravanStack.add(NewCard);
+					TotalValue += NewCard.GetCardValue();
+					LastCardPlayed = NewCard;
+					LastValueCardPlayed = NewCard;
+					AddSuccess = true;
+				}
 			}
+
 		}
 		return AddSuccess;
 	}
@@ -231,7 +235,10 @@ public class Caravan {
 	 * @param newCard
 	 */
 	private void PlayJack(Card newCard) {
-		while (CheckFace(CaravanStack.peek())) {
+		TotalValue =- LastValueCardPlayed.GetCardValue();
+		
+		
+		/*while (CheckFace(CaravanStack.peek())) {
 			CaravanStack.pop();
 			if (!CheckFace(CaravanStack.peek())) {
 				TotalValue = TotalValue - CaravanStack.pop().GetCardValue();
@@ -239,6 +246,7 @@ public class Caravan {
 		}
 		LastCardPlayed = newCard;
 		CaravanStack.add(newCard);
+		*/
 	}
 
 	private boolean PlayJoker(Card newCard) {
@@ -299,6 +307,7 @@ public class Caravan {
 
 		return ReturnString;
 	}
+
 	/**
 	 * 
 	 * @return Total Value in String form
@@ -311,22 +320,25 @@ public class Caravan {
 
 		return ReturnString;
 	}
-	
-	
+
 	/**
 	 * Methods to return the information needed to the GUI
+	 * 
 	 * @return
 	 */
 	public String GetDirection() {
 		return Direction;
 	}
+
 	public Card GetLastCardPlayed() {
 		return LastCardPlayed;
 	}
+
 	public Card GetLastValueCardPlayed() {
 		return LastValueCardPlayed;
-		
+
 	}
+
 	public int GetTotalValue() {
 		return TotalValue;
 	}

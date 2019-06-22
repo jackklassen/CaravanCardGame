@@ -115,7 +115,7 @@ public class CaravanGUI {
 	private void initialize() {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(Color.LIGHT_GRAY);
-		frame.setBounds(100, 100, 431, 516);
+		frame.setBounds(100, 100, 469, 516);
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -135,7 +135,7 @@ public class CaravanGUI {
 				AddToCaravan(2);
 			}
 		});
-		Caravan2.setBounds(149, 50, 90, 110);
+		Caravan2.setBounds(171, 50, 90, 110);
 		frame.getContentPane().add(Caravan2);
 
 		Caravan3 = new JButton("New button");
@@ -144,7 +144,7 @@ public class CaravanGUI {
 				AddToCaravan(3);
 			}
 		});
-		Caravan3.setBounds(250, 50, 90, 110);
+		Caravan3.setBounds(303, 50, 90, 110);
 		frame.getContentPane().add(Caravan3);
 
 		Card1 = new JButton("New button");
@@ -153,7 +153,7 @@ public class CaravanGUI {
 				ClickedCard = PlayerObj.Hand.get(0);
 			}
 		});
-		Card1.setBounds(50, 214, 90, 110);
+		Card1.setBounds(50, 228, 90, 110);
 		frame.getContentPane().add(Card1);
 
 		Card2 = new JButton("New button");
@@ -162,7 +162,7 @@ public class CaravanGUI {
 				ClickedCard = PlayerObj.Hand.get(1);
 			}
 		});
-		Card2.setBounds(150, 214, 90, 110);
+		Card2.setBounds(168, 228, 90, 110);
 		frame.getContentPane().add(Card2);
 
 		Card4 = new JButton("New button");
@@ -171,7 +171,7 @@ public class CaravanGUI {
 				ClickedCard = PlayerObj.Hand.get(3);
 			}
 		});
-		Card4.setBounds(93, 331, 90, 110);
+		Card4.setBounds(102, 356, 90, 110);
 		frame.getContentPane().add(Card4);
 
 		Card3 = new JButton("New button");
@@ -180,7 +180,7 @@ public class CaravanGUI {
 				ClickedCard = PlayerObj.Hand.get(2);
 			}
 		});
-		Card3.setBounds(250, 214, 90, 110);
+		Card3.setBounds(281, 235, 90, 110);
 		frame.getContentPane().add(Card3);
 
 		Card5 = new JButton("New button");
@@ -189,34 +189,34 @@ public class CaravanGUI {
 				ClickedCard = PlayerObj.Hand.get(4);
 			}
 		});
-		Card5.setBounds(193, 331, 90, 110);
+		Card5.setBounds(221, 356, 90, 110);
 		frame.getContentPane().add(Card5);
 		
-		JLabel lblCaravanTotal1 = new JLabel("New label");
-		lblCaravanTotal1.setBounds(60, 171, 46, 14);
+		lblCaravanTotal1 = new JLabel("New label");
+		lblCaravanTotal1.setBounds(36, 171, 117, 14);
 		frame.getContentPane().add(lblCaravanTotal1);
 		
-		JLabel lblCaravanTotal2 = new JLabel("New label");
-		lblCaravanTotal2.setBounds(159, 171, 46, 14);
+		lblCaravanTotal2 = new JLabel("New label");
+		lblCaravanTotal2.setBounds(157, 171, 114, 14);
 		frame.getContentPane().add(lblCaravanTotal2);
 		
-		JLabel lblCaravanTotal3 = new JLabel("New label");
-		lblCaravanTotal3.setBounds(260, 171, 46, 14);
+		lblCaravanTotal3 = new JLabel("New label");
+		lblCaravanTotal3.setBounds(281, 171, 116, 14);
 		frame.getContentPane().add(lblCaravanTotal3);
 		
-		JLabel lblCaravanDirecttion1 = new JLabel("New label");
-		lblCaravanDirecttion1.setBounds(60, 189, 46, 14);
+		lblCaravanDirecttion1 = new JLabel("New label");
+		lblCaravanDirecttion1.setBounds(36, 189, 117, 14);
 		frame.getContentPane().add(lblCaravanDirecttion1);
 		
-		JLabel labellblCaravanDirecttion2 = new JLabel("New label");
-		labellblCaravanDirecttion2.setBounds(159, 189, 46, 14);
-		frame.getContentPane().add(labellblCaravanDirecttion2);
+		lblCaravanDirecttion2 = new JLabel("New label");
+		lblCaravanDirecttion2.setBounds(157, 189, 117, 14);
+		frame.getContentPane().add(lblCaravanDirecttion2);
 		
-		JLabel lblCaravanDirecttion3 = new JLabel("New label");
-		lblCaravanDirecttion3.setBounds(260, 189, 46, 14);
+		lblCaravanDirecttion3 = new JLabel("New label");
+		lblCaravanDirecttion3.setBounds(281, 189, 116, 14);
 		frame.getContentPane().add(lblCaravanDirecttion3);
 		
-		lblTotalValue = new JLabel("New label");
+		lblTotalValue = new JLabel("Total Value: ");
 		lblTotalValue.setBounds(50, 25, 46, 14);
 		frame.getContentPane().add(lblTotalValue);
 	}
@@ -274,13 +274,13 @@ public class CaravanGUI {
 		Caravan3.setText(PlayerObj.PlayerCaravan3.toString());
 	
 		
-		lblCaravanTotal1.setText(PlayerObj.PlayerCaravan1.GetTotalValueStr());
-		//lblCaravanTotal2.setText("Total Caravan: "+PlayerObj.PlayerCaravan2.GetTotalValueStr());
-		//lblCaravanTotal3.setText("Total Caravan: "+PlayerObj.PlayerCaravan3.GetTotalValueStr());
+		lblCaravanTotal1.setText("Total Caravan Value: "+PlayerObj.PlayerCaravan1.GetTotalValueStr());
+		lblCaravanTotal2.setText("Total Caravan Value: "+PlayerObj.PlayerCaravan2.GetTotalValueStr());
+		lblCaravanTotal3.setText("Total Caravan Value: "+PlayerObj.PlayerCaravan3.GetTotalValueStr());
 		
-		//lblCaravanDirecttion1.setText("Caravan Direction: "+PlayerObj.PlayerCaravan1.GetDirection());
-	    //lblCaravanDirecttion2.setText("Caravan Direction: "+PlayerObj.PlayerCaravan2.GetDirection());
-		//lblCaravanDirecttion3.setText("Caravan Direction: "+PlayerObj.PlayerCaravan3.GetDirection());
+		lblCaravanDirecttion1.setText("Caravan Direction: "+PlayerObj.PlayerCaravan1.GetDirection());
+	    lblCaravanDirecttion2.setText("Caravan Direction: "+PlayerObj.PlayerCaravan2.GetDirection());
+		lblCaravanDirecttion3.setText("Caravan Direction: "+PlayerObj.PlayerCaravan3.GetDirection());
 		
 		
 		

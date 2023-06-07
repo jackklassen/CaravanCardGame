@@ -1,12 +1,11 @@
 package CaravanGui;
 
-import java.awt.EventQueue;
+import Caravan.Player;
 
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import Caravan.*;
+import java.awt.event.ActionListener;
 
 public class MainScreen {
 

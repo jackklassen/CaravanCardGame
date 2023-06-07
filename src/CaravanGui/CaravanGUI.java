@@ -1,21 +1,12 @@
 package CaravanGui;
 
-import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import Caravan.*;
-import java.awt.event.ActionListener;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-import java.awt.Color;
-import javax.swing.JSeparator;
-import java.awt.Panel;
-import javax.swing.Box;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.CompoundBorder;
+import java.awt.event.ActionListener;
 
 public class CaravanGUI {
 

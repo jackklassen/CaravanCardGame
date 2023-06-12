@@ -62,11 +62,11 @@ public class Main {
 			for (int i = 0; i < 5; i++) {
 				Card CurrentCard = PlayerObj.Hand.get(i);
 				System.out.println(
-						CurrentCard.getCardType() + " " + CurrentCard.getColour() + " " + CurrentCard.getSuit());
+						CurrentCard.getCardType() + " " + " " + CurrentCard.getSuit());
 
 			}
 			PlayerInput = input.next();
-			CardToCaravanInput(PlayerInput);
+		//	CardToCaravanInput(PlayerInput);
 			
 		}
 
@@ -82,15 +82,15 @@ public class Main {
 	/**
 	 * Handle the user inputing what card goes to what caravan
 	 */
-	public static void CardToCaravanInput(String Input) {
+	/**public static void CardToCaravanInput(String Input) {
 		// user enters a (cardval)(caravan number) string this adds the card to the
 		// caravan
-		String InputCard = String.valueOf(Input.charAt(0));
+		char InputCard = String.valueOf(Input.charAt(0));
 
 		char inputCaravn = Input.charAt(1);
 
 		// add a get based on value method into the player hand class
-		Card PlayedCard = PlayerObj.PlayCard(InputCard);
+		Card PlayedCard = PlayerObj.Hand.get(int(InputCard));
 		switch (inputCaravn) {
 		case ('1'):
 			PlayerObj.PlayerCaravan1.AddToCaravan(PlayedCard);
@@ -103,6 +103,6 @@ public class Main {
 			break;
 
 		}
-	}
+	}**/
 
 }

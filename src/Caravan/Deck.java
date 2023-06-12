@@ -1,14 +1,13 @@
 package Caravan;
 
-import java.util.Random;
+import java.util.Collections;
 import java.util.Stack;
 
 public class Deck {
 //stack of randomly generated cards
-	public Stack<Card> Deck = new Stack<Card>();
-	private String CardColour[] = { "B", "R" };
-	private String Suit[] = { "H", "D", "C", "S" };
-	private String CardType[] = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A","JO" };
+	public Stack<Card> Deck = new Stack<>();
+	private final String Suit[] = { "H", "D", "C", "S" };
+
 
 	/**
 	 * 
@@ -16,34 +15,29 @@ public class Deck {
 	 * 
 	 */
 	public void FillDeck(int n) {
-		for (int i = 0; i < n; i++) {
-			Deck.push(CreateRandomCardProperColour()); // create a random card and add it to the stack
-		
-		
+		Stack<Card> realdeck = FillRealDeck();
+
+		Collections.shuffle(realdeck);
+		for (int i = 0; i < (n); i++) {
+			Deck.add(realdeck.pop());
 		}
 	}
 
 	/**
-	 * generate a Card of Random Colour, suit, and Length
-	 * 
+	 * Build a real deck of 52 cards plus two jokers
 	 */
-	public Card CreateRandomCard() {
-		Random random = new Random();
-		Card NewCard = new Card(CardColour[random.nextInt(CardColour.length)], Suit[random.nextInt(Suit.length)],
-				CardType[random.nextInt(CardType.length)]);
-		return NewCard;
-	}
-	
-	public Card CreateRandomCardProperColour() {
-		Random random = new Random();
-		Card NewCard = new Card(CardColour[1], Suit[random.nextInt(Suit.length)],
-				CardType[random.nextInt(CardType.length)]);
-		
-		if(NewCard.getSuit() == "C" || NewCard.getSuit() == "S" ) {
-			NewCard.setColour("B");
+	public Stack<Card> FillRealDeck(){
+		Stack<Card> realdeck = new Stack<>();
+		for(String s : Suit){
+			for(int i = 1; i < 14; i++){
+				Card card = new Card(s, i);
+				realdeck.add(card);
+			}
+
 		}
-		
-		return NewCard;
+		Card joker = new Card("Joker",14);
+		realdeck.add(joker);
+		realdeck.add(joker);
+		return realdeck;
 	}
-	
 }

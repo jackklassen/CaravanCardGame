@@ -28,57 +28,48 @@ public class Player {
 	}
 	/**
 	 * Draws a New Card From the Deck
+	 * if it returns false then the deck is empty and the player who pulled a new card either loses or at least ends the game.
 	 * @param SpentCard
 	 */
-	public void DrawACard(Card SpentCard){
-		if(PlayerDeck.Deck.size() > 5) {
-		Hand.remove(SpentCard);
-		Hand.add(PlayerDeck.Deck.pop());
-		} //need to add a way of putting in "null"or dud cards when deck is empty
+	public boolean DrawACard(Card SpentCard){
+		int index = Hand.indexOf(SpentCard);
+		try{
+			Card newcard = PlayerDeck.Deck.pop();
+			Hand.set(index,newcard);
+			return true;
+		} catch (Exception E){
+			return false;
+		}
+
 	}
 
 	/**
-	 * use The PlayerDeck to fill a hand
+	 * use The PlayerDeck to fill a hand.
+	 * should really only happen once
 	 */
 	public void FillHand() {
-		if(PlayerDeck.Deck.size() > 5) {
-		for (int i = 0; i < 5; i++) {
+		if(PlayerDeck.Deck.size() > 8) {
+		for (int i = 0; i < 8; i++) {
 			Hand.add(PlayerDeck.Deck.pop());
 		}
 		}
 	}
-
-	public void RedrawHand() {
-		if(PlayerDeck.Deck.size() > 5) {
-			//for(Card c: Hand) {
-				//PlayerDeck.Deck.add(PlayerDeck.Deck.size(), c);
-				
-		//	}
-		Hand.clear();
-		FillHand();
-		} 
-	}
-
-	/**
-	 * Handle Finding a card in the hand removing it and getting a new card.
-	 */
-	public Card PlayCard(String CardType) {
-
-		Card PlayedCard = null;
-		int HandSize = Hand.size();
-		Card CurrentCard = null;
-
-		for (int i = 0; i < HandSize; i++) {
-			CurrentCard = Hand.get(i);
-			if (CurrentCard.getCardType().equals(CardType)) {
-				PlayedCard = Hand.get(i);
-				Hand.remove(i);
+	public void PlayCard(Card currentcard, int caravannum){
+		switch (caravannum){
+			case 1:
+				PlayerCaravan1.AddToCaravan(currentcard);
+				DrawACard(currentcard);
 				break;
-			}
+			case 2:
+				PlayerCaravan2.AddToCaravan(currentcard);
+				DrawACard(currentcard);
+				break;
+			case 3:
+				PlayerCaravan3.AddToCaravan(currentcard);
+				DrawACard(currentcard);
+				break;
 		}
-		Hand.add(PlayerDeck.Deck.pop());
 
-		return PlayedCard;
 	}
 
 	public void SetGameUp() {
@@ -87,12 +78,11 @@ public class Player {
 	}
 
 	/**
-	 * Checks if the player has won or lost and if any caravan is complete and sets
-	 * values according to that
+	 * this is wrong, it is not how caravan works and this should be moved to the caravine pile itself to account for if a pile is sold or under/over burdened
 	 * 
 	 * @return
 	 */
-	public int CheckWinLoss() {
+	/**public int CheckWinLoss() {
 
 		int WinNeutralLoss = 0; // -1 means lost, 0 means fine, 1 means won
 
@@ -121,6 +111,6 @@ public class Player {
 
 		return WinNeutralLoss;
 
-	}
+	}*/
 
 }

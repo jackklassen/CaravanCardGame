@@ -3,16 +3,16 @@ package Caravan;
 import java.util.Stack;
 
 public class Caravan {
-	private Stack<Card> CaravanStack = new Stack<Card>();
+	private Stack<Card> CaravanStack = new Stack<>();
 	private Card LastCardPlayed;
 	private Card LastValueCardPlayed;
-	private int MinWinValue = 21;
-	private int MinLossValue = 27;
 	private int TotalValue = 0;
 	public boolean CaravanWon = false;
 	public boolean CaravanLost = false;
 	private String Direction = ""; // caravan must be going up in value or down in value the second card played in
 									// a caravan determines this
+
+	private String Suit = ""; // use to set suit so that if a joker is played its not checking the suit of a joker
 
 	public Card getLastCardPlayed() {
 		return LastCardPlayed;
@@ -32,16 +32,24 @@ public class Caravan {
 	 * @return true if card can be played false if it can't.
 	 * 
 	 *         use sub playable methods to check if the Card works based on
-	 *         direction and colour
+	 *         direction and suit
 	 */
 	public boolean CheckPlayable(Card NextCard) {
-		if (CheckDirection(NextCard)) {
-			System.out.println("Direction Passed");
-			if (CheckColour(NextCard)) {
-				System.out.println("Colour Passed");
+		if((TotalValue + NextCard.getCardType()) > 26 && NextCard.getCardType() != 14 && NextCard.getCardType() != 11){
+			//if the next card would put the caravan over the upper limt
+			// and it isn't a jack or a joker then don't allow it to be played
+			if (CheckDirection(NextCard)) {
+				System.out.println("Direction Passed");
+				return true;
+			}
+			if (CheckSuit(NextCard)) {
+				System.out.println("Suit Passed");
 				return true;
 			}
 		}
+
+
+
 		return false;
 	}
 
@@ -53,11 +61,11 @@ public class Caravan {
 	 */
 	public boolean CheckDirection(Card NextCard) {
 		if (Direction == "DSC") {
-			if (NextCard.GetCardValue() <= LastValueCardPlayed.GetCardValue()) {
+			if (NextCard.getCardType()<= LastValueCardPlayed.getCardType()) {
 				return true;
 			}
 		} else if (Direction == "ASC") {
-			if (NextCard.GetCardValue() >= LastValueCardPlayed.GetCardValue()) {
+			if (NextCard.getCardType() >= LastValueCardPlayed.getCardType()) {
 				return true;
 			}
 		} else if (CheckFace(NextCard)) {
@@ -70,38 +78,37 @@ public class Caravan {
 	/**
 	 * 
 	 * @param NextCard
-	 * @return true if Color of the NextCard is different form the LastCardPlayed
-	 *         Color.
+	 * @return true if Suit of the NextCard is the same as the LastCardPlayed.
 	 */
-	public boolean CheckColour(Card NextCard) {
-		if (NextCard.getColour() == LastValueCardPlayed.getColour())
-			return false;
-		return true;
-	}
-
-	/**
-	 * 
-	 * @return true if the Player has won
-	 */
-	public boolean CheckWin() {
-		if (TotalValue > MinWinValue && TotalValue < MinLossValue) {
-			CaravanWon = true;
+	public boolean CheckSuit(Card NextCard) {
+		if (NextCard.getSuit() == LastValueCardPlayed.getSuit())
 			return true;
-		}
 		return false;
 	}
 
 	/**
 	 * 
-	 * @return true if the player has Lost
+	 * @return this is useless, inseted the caravan should check if "sellable", i.e. between 21 and 29
 	 */
-	public boolean CheckLoss() {
-		if (TotalValue >= MinLossValue) {
-			CaravanLost = true;
-			return true;
-		}
-		return false;
-	}
+	//public boolean CheckWin() {
+	//	if (TotalValue > MinWinValue && TotalValue < MinLossValue) {
+	//		CaravanWon = true;
+	//		return true;
+	//	}
+	//	return false;
+	//}
+
+	/**
+	 * 
+	 * @return this maybe repuerposed into a caravan checck over/under burdeon
+	 */
+	//public boolean CheckLoss() {
+	//	if (TotalValue >= MinLossValue) {
+	//		CaravanLost = true;
+	//		return true;
+	//	}
+	//	return false;
+	//}
 
 	/**
 	 * Method to Add the Card Given to the Caravan Selected
@@ -109,13 +116,13 @@ public class Caravan {
 	 * @param NewCard
 	 * 
 	 */
-	public Boolean AddToCaravan(Card NewCard) {
+	public Boolean AddToCaravan(Card NewCard) { //make sure you can't play a face card on top of nothing
 		Boolean AddSuccess = false;
 
 		if (CaravanStack.size() == 0) {
-			if (!CheckFace(NewCard)) {
+			if (!CheckFace(NewCard)) {//this should actually do the thing i said
 				CaravanStack.add(NewCard);
-				TotalValue += NewCard.GetCardValue();
+				TotalValue += NewCard.getCardType();
 				LastCardPlayed = NewCard;
 				LastValueCardPlayed = NewCard;
 				AddSuccess = true;
@@ -124,14 +131,13 @@ public class Caravan {
 		}
 
 		if (CaravanStack.size() == 1) {
-			if (CaravanStack.peek().GetCardValue() > NewCard.GetCardValue()) {
+			if (CaravanStack.peek().getCardType() > NewCard.getCardType()) {
 				Direction = "DSC";
 
 			}
-			if (CaravanStack.peek().GetCardValue() < NewCard.GetCardValue()) {
+			if (CaravanStack.peek().getCardType() < NewCard.getCardType()) {
 				Direction = "ASC";
 			}
-			// System.out.println(Direction);
 		}
 		if (CaravanStack.size() >= 1) {
 			if (CheckFace(NewCard)) {
@@ -140,7 +146,7 @@ public class Caravan {
 			} else if (!CheckFace(NewCard)) {
 				if (CheckPlayable(NewCard)) {
 					CaravanStack.add(NewCard);
-					TotalValue += NewCard.GetCardValue();
+					TotalValue += NewCard.getCardType();
 					LastCardPlayed = NewCard;
 					LastValueCardPlayed = NewCard;
 					AddSuccess = true;
@@ -158,28 +164,27 @@ public class Caravan {
 	 * @return
 	 */
 
-	public boolean CheckFace(Card NewCard) {
-		if (NewCard.getCardType() != "A" && NewCard.GetCardValue() > 10)
+	private boolean CheckFace(Card NewCard) {
+		if (NewCard.getCardType() > 10)
 			return true;
 		else
 			return false;
 	}
 
-	public void AddFace(Card NewCard) {
+	private void AddFace(Card NewCard) {
 		switch (NewCard.getCardType()) {
-		case "JO":
+		case 14:
 			PlayJoker(NewCard);
 			break;
-		case "J":
+		case 11:
 			PlayJack(NewCard);
 			break;
-		case "Q":
+		case 12:
 			PlayQueen(NewCard);
 			break;
-		case "K":
+		case 13:
 			PlayKing(NewCard);
 			break;
-
 		}
 	}
 
@@ -204,8 +209,8 @@ public class Caravan {
 	private boolean PlayKing(Card newCard) {
 
 		if (!CheckFace(LastCardPlayed)) {
-			TotalValue += LastCardPlayed.GetCardValue();
-			LastCardPlayed = newCard;
+			TotalValue += LastCardPlayed.getCardType();
+			//don't update the last card played with the king so that a second king could be played
 			CaravanStack.add(newCard);
 			return true;
 		}
@@ -224,7 +229,7 @@ public class Caravan {
 			Direction = "ASC";
 		}
 
-		LastCardPlayed = newCard;
+		//keep last card played as the last non-face card
 		CaravanStack.add(newCard);
 		return true;
 	}
@@ -235,22 +240,28 @@ public class Caravan {
 	 * @param newCard
 	 */
 	private void PlayJack(Card newCard) {
-		TotalValue =- LastValueCardPlayed.GetCardValue();
+		TotalValue =- LastValueCardPlayed.getCardType();
 		
 		
-		/*while (CheckFace(CaravanStack.peek())) {
+		while (CheckFace(CaravanStack.peek())) {
 			CaravanStack.pop();
 			if (!CheckFace(CaravanStack.peek())) {
-				TotalValue = TotalValue - CaravanStack.pop().GetCardValue();
+				TotalValue = TotalValue - CaravanStack.pop().getCardType();
+				break;
 			}
 		}
-		LastCardPlayed = newCard;
+		LastCardPlayed = CaravanStack.peek(); //whatever is just below the Jack
 		CaravanStack.add(newCard);
-		*/
+
 	}
 
+	/**
+	 * Joker is messy put some thought into making this work
+	 * @param newCard
+	 * @return
+	 */
 	private boolean PlayJoker(Card newCard) {
-		if (LastCardPlayed.getCardType() == "A") {
+		if (LastCardPlayed.getCardType() == 1) {
 			for (Card c : CaravanStack) {
 				if (c.getSuit() == LastCardPlayed.getSuit()) {
 					CaravanStack.remove(c);
@@ -261,7 +272,7 @@ public class Caravan {
 				if (c.equals(LastCardPlayed))
 					break;
 
-				else if (c.equals(LastCardPlayed.GetCardValue()))
+				else if (c.equals(LastCardPlayed.getCardType()))
 					CaravanStack.remove(c);
 
 			}
@@ -300,12 +311,9 @@ public class Caravan {
 	 * Overloaded toString Method.
 	 */
 	public String toString() {
-		String ReturnString = null;
-		Integer NewTotalValue = TotalValue;
+//		String returnstring = LastCardPlayed.getCardType() + LastCardPlayed.getSuit();
 
-		ReturnString = NewTotalValue.toString() + " " + LastCardPlayed + " " + Direction;
-
-		return ReturnString;
+		return "test";
 	}
 
 	/**

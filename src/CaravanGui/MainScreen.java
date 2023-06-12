@@ -36,6 +36,7 @@ public class MainScreen {
 
 	/**
 	 * Initialize the contents of the frame.
+	 *
 	 */
 	private void initialize() {
 		frame = new JFrame();
@@ -64,7 +65,7 @@ public class MainScreen {
 
 	public void RunOnePlayer() {
 		CaravanGUI Player1 = new CaravanGUI();
-		Player1.NewScreen("Caravan");
+		//Player1.NewScreen("Caravan");
 		Player1.TwoPlayers = false;
 	}
 
@@ -75,6 +76,7 @@ public class MainScreen {
 		boolean GameDone = false;
 		//while (!GameDone) {
 		CaravanGUI Game = new CaravanGUI();
+
 		
 			Player Player1 = new Player();
 			Player Player2 = new Player();
@@ -83,13 +85,18 @@ public class MainScreen {
 			Player2.SetGameUp();
 			
 			Game.TwoPlayers = true;
-			
+
+			Game.Player1 = Player1;
 			Game.Player2 = Player2;
-			Game.NewScreen("Caravan");
+
+			Game.StartGUI();
+			this.frame.dispose();
+
+
+
+			//Game.NewScreen("Caravan");
 			
 			//Game.ChangePlayer(Player2);
-			
-			
 			
 		//}
 

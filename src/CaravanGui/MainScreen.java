@@ -64,41 +64,46 @@ public class MainScreen {
 	}
 
 	public void RunOnePlayer() {
-		CaravanGUI Player1 = new CaravanGUI();
-		//Player1.NewScreen("Caravan");
-		Player1.TwoPlayers = false;
+		CaravanGUI Game = new CaravanGUI();
+
+		Player Player1 = new Player();
+		Player AI = new Player();
+
+		Player1.SetGameUp();
+		AI.isAI = true;
+
+
+		AI.SetGameUp();
+		Game.Player1 = Player1;
+		Game.Player2 = AI;
+
+		Game.StartGUI();
+		this.frame.dispose();
+
 	}
 
 	/**
 	 * mangage two human players
 	 */
 	public void RunTwoPlayers() {
-		boolean GameDone = false;
-		//while (!GameDone) {
+
+
 		CaravanGUI Game = new CaravanGUI();
 
 		
 			Player Player1 = new Player();
 			Player Player2 = new Player();
-			
+			Player2.isAI = false;
+			Player1.isCurrent = true;
+
 			Player1.SetGameUp();
 			Player2.SetGameUp();
-			
-			Game.TwoPlayers = true;
-
 			Game.Player1 = Player1;
 			Game.Player2 = Player2;
+			System.out.println("RunTwoCalled");
+
 
 			Game.StartGUI();
 			this.frame.dispose();
-
-
-
-			//Game.NewScreen("Caravan");
-			
-			//Game.ChangePlayer(Player2);
-			
-		//}
-
 	}
 }

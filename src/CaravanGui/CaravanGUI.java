@@ -1,29 +1,32 @@
 package CaravanGui;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import Caravan.*;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
 
 
 public class CaravanGUI {
 
 
     private Card clickedcard = null;
-    public boolean TwoPlayers = false;
-    private int CurrentPlayer = 1;
+    private boolean TwoPlayers; //shouldnt occur here so its basiclly depreciated
 
     public static Player Player1;
     public static Player Player2;
 
-    public static Player PlayerObj = new Player();
+    public static Player PlayerObj;
+    public static Player OpPLayerObj;
 
     private JFrame frame;
     private JPanel toppanel;
     private JPanel bottompanel;
     private JPanel middlepanel;
-    private JButton dumppile1Button;
+    private JButton dumppile1button;
     private JButton dumppile3Button;
     private JButton dumppile2Button;
     private JButton card1Button;
@@ -103,43 +106,75 @@ public class CaravanGUI {
         pile1Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PlayerObj.PlayCard(clickedcard,1);
+                if (PlayerObj.PlayCard(clickedcard, 1)) {
+                    SwapPlayer();
+                }
                 clickedcard = null;
-                SwapPlayer();
             }
         });
         pile2Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PlayerObj.PlayCard(clickedcard,2);
+                if (PlayerObj.PlayCard(clickedcard, 2)) {
+                    SwapPlayer();
+                }
                 clickedcard = null;
-                SwapPlayer();
             }
         });
-        pile3Button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                PlayerObj.PlayCard(clickedcard,3);
-                clickedcard = null;
+        pile3Button.addActionListener(e -> {
+            if (PlayerObj.PlayCard(clickedcard, 3)) {
                 SwapPlayer();
             }
+            clickedcard = null;
         });
         discardButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            System.out.println(PlayerObj.Hand);
-            if(PlayerObj.DrawACard(clickedcard)){
                 System.out.println(PlayerObj.Hand);
-                clickedcard = null;
-                SwapPlayer();
-            }
-            //if the discard doesn't work then stop the game and award the player with the most and highest sold carvans the win.
+                if (PlayerObj.DrawACard(clickedcard)) {
+                    System.out.println(PlayerObj.Hand);
+                    clickedcard = null;
+                    SwapPlayer();
+
+
+                }
+
+                //if the discard doesn't work then stop the game and award the player with the most and highest sold carvans the win.
 
 
             }
         });
-    } /**
-     *Main function preserved for quick debugging, not to be called in normal use of this class.
+        dumppile1button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(PlayerObj.DumpCaravan(1)){
+                    SwapPlayer();
+                }
+                clickedcard = null;
+            }
+        });
+        dumppile2Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(PlayerObj.DumpCaravan(2)){
+                    SwapPlayer();
+                }
+                clickedcard = null;
+            }
+        });
+        dumppile3Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(PlayerObj.DumpCaravan(3)){
+                    SwapPlayer();
+                }
+                clickedcard = null;
+            }
+        });
+    }
+
+    /**
+     * Main function preserved for quick debugging, not to be called in normal use of this class.
      */
     public static void main(String[] args) {
         System.out.print("this fired");
@@ -150,20 +185,32 @@ public class CaravanGUI {
         frame.setVisible(true);
     }
 
+    /**
+     * TODO: add something for when a someone sells all their caravans.
+     */
     public void StartGUI() {
         frame = new JFrame("Caravan");
         frame.setContentPane(new CaravanGUI().mainpanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
+
+        frame.setSize(1200,900);
+
         frame.setVisible(true);
-        PlayerObj = Player1; //not a good fix but workable for right now
-        SetHand();
+
+
+
+
+        PlayerObj = Player1;
+        OpPLayerObj = Player2;
+        SetCaravanIMG();
+        SetHandIMG();
+
     }
 
 
     /**
-     	 * used to paint and repaint the current condition of the hand onto the GUI
-     	 */
+     * used to paint and repaint the current condition of the hand onto the GUI
+     */
     public void SetHand() {
         card1Button.setText(PlayerObj.Hand.get(0).toString());
         card2Button.setText(PlayerObj.Hand.get(1).toString());
@@ -173,36 +220,81 @@ public class CaravanGUI {
         card6Button.setText(PlayerObj.Hand.get(5).toString());
         card7Button.setText(PlayerObj.Hand.get(6).toString());
         card8Button.setText(PlayerObj.Hand.get(7).toString());
-        SwingUtilities.updateComponentTreeUI(card1Button);
-    }
-
-    //	/**
-//	 * set up the inital Caravan Gui
-//	 */
-    public void SetGameUp() {
-        PlayerObj.SetGameUp();
-        SetHand();
-        SetCaravan();
 
     }
+    public void SetHandIMG() {
+        String card1imgstring = GetImageName(PlayerObj.Hand.get(0));
+        String card2imgstring = GetImageName(PlayerObj.Hand.get(1));
+        String card3imgstring = GetImageName(PlayerObj.Hand.get(2));
+        String card4imgstring = GetImageName(PlayerObj.Hand.get(3));
+        String card5imgstring = GetImageName(PlayerObj.Hand.get(4));
+        String card6imgstring = GetImageName(PlayerObj.Hand.get(5));
+        String card7imgstring = GetImageName(PlayerObj.Hand.get(6));
+        String card8imgstring = GetImageName(PlayerObj.Hand.get(7));
 
-    /**TODO: this is bugged.
-     * does the simple swapping of the player
+
+        try {
+            Image card1img = ImageIO.read(new FileInputStream(card1imgstring));
+            Image card2img = ImageIO.read(new FileInputStream(card2imgstring));
+            Image card3img = ImageIO.read(new FileInputStream(card3imgstring));
+            Image card4img = ImageIO.read(new FileInputStream(card4imgstring));
+            Image card5img = ImageIO.read(new FileInputStream(card5imgstring));
+            Image card6img = ImageIO.read(new FileInputStream(card6imgstring));
+            Image card7img = ImageIO.read(new FileInputStream(card7imgstring));
+            Image card8img = ImageIO.read(new FileInputStream(card8imgstring));
+
+
+
+            card1Button.setIcon(new ImageIcon(card1img));
+            card2Button.setIcon(new ImageIcon(card2img));
+            card3Button.setIcon(new ImageIcon(card3img));
+            card4Button.setIcon(new ImageIcon(card4img));
+            card5Button.setIcon(new ImageIcon(card5img));
+            card6Button.setIcon(new ImageIcon(card6img));
+            card7Button.setIcon(new ImageIcon(card7img));
+            card8Button.setIcon(new ImageIcon(card8img));
+        }
+        catch (Exception E){
+            System.out.println(E);
+        }
+    }
+
+
+
+    /**
+     *does the simple swapping of the player
+     *
      * @return true if player changed false if not
      */
-    public boolean SwapPlayer(){
-        if (CurrentPlayer == 1){
-            ChangePlayer(Player2);
-            CurrentPlayer = 2;
-            playerlabel.setText("Player: "+ CurrentPlayer + "'s Caravans." );
-            opplayerlabel.setText("Player: 1" + "'s Caravans." );
+    public boolean SwapPlayer() {
+        System.out.println(Player2.isAI);
+
+       if(OpPLayerObj.isAI == true){ //if its just one player and AI just skip all the other stuff.
+            OpPLayerObj.PlayAI();
+            playerlabel.setText("Your Caravans.");
+            opplayerlabel.setText("AI's Caravans.");
+            SetHandIMG();
+           SetCaravanIMG();
+           SetOPCaravan();
             return true;
+       }
+
+        if (Player1.isCurrent) {
+            ChangePlayer(Player2);
+            ChangePlayer(Player2);
+            Player2.isCurrent = true;
+            Player1.isCurrent = false;
+            playerlabel.setText("Player: 2's Caravans.");
+            opplayerlabel.setText("Player: 1's Caravans.");
+            return true;
+
         }
-        if(CurrentPlayer == 2){
+        if (Player2.isCurrent) {
             ChangePlayer(Player1);
-            CurrentPlayer = 1;
-            playerlabel.setText("Player: "+ CurrentPlayer + "'s Caravans." );
-            opplayerlabel.setText("Player: 2" + "'s Caravans." );
+            Player1.isCurrent = true;
+            Player2.isCurrent = false;
+            playerlabel.setText("Player: 1's Caravans.");
+            opplayerlabel.setText("Player: 2's Caravans.");
             return true;
         }
         return false;
@@ -210,77 +302,144 @@ public class CaravanGUI {
 
     /**
      * this function does the swapping of players
+     *
      * @param NewPlayer
      */
     public void ChangePlayer(Player NewPlayer) {
+        OpPLayerObj = PlayerObj;
         PlayerObj = NewPlayer;
-        SetHand();
-        SetCaravan();
+        SetHandIMG();
+        SetCaravanIMG();
+        SetOPCaravan();
+
+    }
+
+
+    /**
+     * Used to set up and reset the visuals of the GUI
+     */
+    public void SetCaravan() { //this is still not applying neither is the hand thing on first run.
+        pile1Button.setText(PlayerObj.PlayerCaravan1.toString());
+        pile2Button.setText(PlayerObj.PlayerCaravan2.toString());
+        pile3Button.setText(PlayerObj.PlayerCaravan3.toString());
+
+        if (PlayerObj.PlayerCaravan1.CheckSold()) {
+            pile1info.setText("SOLD " + "Total Caravan Value: " + PlayerObj.PlayerCaravan1.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + PlayerObj.PlayerCaravan1.GetDirection());
+        } else {
+            pile1info.setText("Total Caravan Value: " + PlayerObj.PlayerCaravan1.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + PlayerObj.PlayerCaravan1.GetDirection());
+        }
+        if (PlayerObj.PlayerCaravan2.CheckSold()) {
+            pile2info.setText("SOLD " + "Total Caravan Value: " + PlayerObj.PlayerCaravan2.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + PlayerObj.PlayerCaravan2.GetDirection());
+        } else {
+            pile2info.setText("Total Caravan Value: " + PlayerObj.PlayerCaravan2.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + PlayerObj.PlayerCaravan2.GetDirection());
+        }
+        if (PlayerObj.PlayerCaravan3.CheckSold()) {
+            pile3info.setText("SOLD " + "Total Caravan Value: " + PlayerObj.PlayerCaravan3.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + PlayerObj.PlayerCaravan3.GetDirection());
+            ;
+        } else {
+            pile3info.setText("Total Caravan Value: " + PlayerObj.PlayerCaravan3.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + PlayerObj.PlayerCaravan3.GetDirection());
+        }
+
+    }
+
+    public void SetCaravanIMG() { //this is still not applying neither is the hand thing on first run.
+        String pile1imgstring = GetImageName(PlayerObj.PlayerCaravan1.getLastCardPlayed());
+        String pile2imgstring = GetImageName(PlayerObj.PlayerCaravan2.getLastCardPlayed());
+        String pile3imgstring = GetImageName(PlayerObj.PlayerCaravan3.getLastCardPlayed());
+        System.out.println(pile1imgstring);
+
+        try {
+            Image pile1img = ImageIO.read(new FileInputStream(pile1imgstring)); //need generic img for no card played, need to resize the images themselves and the gui to make it look nice
+            Image pile2img = ImageIO.read(new FileInputStream(pile2imgstring));
+            Image pile3img = ImageIO.read(new FileInputStream(pile3imgstring));
+
+
+           pile1Button.setIcon(new ImageIcon(pile1img));
+           pile2Button.setIcon(new ImageIcon(pile2img));
+           pile3Button.setIcon(new ImageIcon(pile3img));
+
+        } catch (Exception E){
+            System.out.println(E);
+        }
+
+
+        if (PlayerObj.PlayerCaravan1.CheckSold()) {
+            pile1info.setText("SOLD " + "Total Caravan Value: " + PlayerObj.PlayerCaravan1.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + PlayerObj.PlayerCaravan1.GetDirection());
+        } else {
+            pile1info.setText("Total Caravan Value: " + PlayerObj.PlayerCaravan1.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + PlayerObj.PlayerCaravan1.GetDirection());
+        }
+        if (PlayerObj.PlayerCaravan2.CheckSold()) {
+            pile2info.setText("SOLD " + "Total Caravan Value: " + PlayerObj.PlayerCaravan2.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + PlayerObj.PlayerCaravan2.GetDirection());
+        } else {
+            pile2info.setText("Total Caravan Value: " + PlayerObj.PlayerCaravan2.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + PlayerObj.PlayerCaravan2.GetDirection());
+        }
+        if (PlayerObj.PlayerCaravan3.CheckSold()) {
+            pile3info.setText("SOLD " + "Total Caravan Value: " + PlayerObj.PlayerCaravan3.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + PlayerObj.PlayerCaravan3.GetDirection());
+            ;
+        } else {
+            pile3info.setText("Total Caravan Value: " + PlayerObj.PlayerCaravan3.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + PlayerObj.PlayerCaravan3.GetDirection());
+        }
+
+    }
+
+
+    public void SetOPCaravan() {
+        oppile1.setText(OpPLayerObj.PlayerCaravan1.toString());
+        oppile2.setText(OpPLayerObj.PlayerCaravan2.toString());
+        oppile3.setText(OpPLayerObj.PlayerCaravan3.toString());
+
+        if (OpPLayerObj.PlayerCaravan1.CheckSold()) {
+            oppile1info.setText("SOLD " + "Total Caravan Value: " + OpPLayerObj.PlayerCaravan1.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + OpPLayerObj.PlayerCaravan1.GetDirection());
+        } else {
+            oppile1info.setText("Total Caravan Value: " + OpPLayerObj.PlayerCaravan1.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + OpPLayerObj.PlayerCaravan1.GetDirection());
+        }
+        if (PlayerObj.PlayerCaravan2.CheckSold()) {
+            oppile2info.setText("SOLD " + "Total Caravan Value: " + OpPLayerObj.PlayerCaravan2.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + OpPLayerObj.PlayerCaravan2.GetDirection());
+        } else {
+            oppile2info.setText("Total Caravan Value: " + OpPLayerObj.PlayerCaravan2.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + OpPLayerObj.PlayerCaravan2.GetDirection());
+        }
+        if (OpPLayerObj.PlayerCaravan3.CheckSold()) {
+            oppile3info.setText("SOLD " + "Total Caravan Value: " + OpPLayerObj.PlayerCaravan3.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + OpPLayerObj.PlayerCaravan3.GetDirection());
+            ;
+        } else {
+            oppile3info.setText("Total Caravan Value: " + OpPLayerObj.PlayerCaravan3.GetTotalValueStr() + " " +
+                    "Caravan Direction: " + OpPLayerObj.PlayerCaravan3.GetDirection());
+        }
+
 
     }
 
 
 
-
-    /**
-      * set up the GUI for the Caravans
-     */
-
-	public void SetCaravan() {
-        pile1Button.setText(PlayerObj.PlayerCaravan1.toString());
-        pile2Button.setText(PlayerObj.PlayerCaravan2.toString());
-        pile3Button.setText(PlayerObj.PlayerCaravan3.toString());
-
-        pile1info.setText("Total Caravan Value: " + PlayerObj.PlayerCaravan1.GetTotalValueStr() + " " +
-                "Caravan Direction: " + PlayerObj.PlayerCaravan1.GetDirection());
-        pile2info.setText("Total Caravan Value: " + PlayerObj.PlayerCaravan2.GetTotalValueStr()  + " " +
-                "Caravan Direction: " + PlayerObj.PlayerCaravan2.GetDirection());
-        pile3info.setText("Total Caravan Value: " + PlayerObj.PlayerCaravan3.GetTotalValueStr()  + " " +
-                "Caravan Direction: " + PlayerObj.PlayerCaravan3.GetDirection());
-	}
+    public String GetImageName(Card card){
+        if(!(card == null)) {
+            String suit = card.getSuit();
+            String type = String.valueOf(card.getCardType());
+            return ("resource/" + type + "_of_" + suit + ".png");
+        }
+        return ("resource/red_joker.png");
+    }
 
 }
 
-
-
-
-
-//
-//
-//old version package CaravanGui;
-//
-
-
-//	/**
-//	 * TODO: Create ToString methods for Cards And Caravans Remove a card and put a
-//	 * new one in the same place
-//	 *
-//	 * reduce amount done on this gui make gui better for two players
-//	 *
-//	 * add images
-//	 * make it so that a player can see the caravans of the opponent.
-//	 *
-//	 * add proper rule https://fallout.fandom.com/wiki/Caravan_(game)
-//	 */
-//
-//	 * Create the application.
-//	 */
-//	public CaravanGUI() {
-//
-//		initialize();
-//		SetGameUp();
-//		this.frame.setTitle("Caravan");
-//
-//	}
-//
-//	public CaravanGUI(String Name) {
-//
-//		initialize();
-//		SetGameUp();
-//		this.frame.setTitle(Name);
-//
-//	}
-/**+
+/**
     public static void NewScreen(String Name) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -293,158 +452,4 @@ public class CaravanGUI {
             }
         });
     }
-
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    CaravanGUI window = new CaravanGUI();
-                    window.frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    public CaravanGUI() {
-
-        initialize();
-        SetGameUp();
-        this.frame.setTitle("Caravan");
-
-    }
-
-    public CaravanGUI(String Name) {
-
-        initialize();
-        SetGameUp();
-        this.frame.setTitle(Name);
-
-    }
-
-
-    private void initialize() {
-        frame = new JFrame();
-        frame.getContentPane().setBackground(Color.LIGHT_GRAY);
-        frame.setBounds(100, 100, 525, 653);
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(null);
-
-        Caravan1 = new JButton("New button");
-        Caravan1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                AddToCaravan(1);
-            }
-        });
-        Caravan1.setBounds(37, 50, 100, 150);
-        frame.getContentPane().add(Caravan1);
-
-        Caravan2 = new JButton("New button");
-        Caravan2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                AddToCaravan(2);
-            }
-        });
-        Caravan2.setBounds(202, 50, 100, 150);
-        frame.getContentPane().add(Caravan2);
-
-        Caravan3 = new JButton("New button");
-        Caravan3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                AddToCaravan(3);
-            }
-        });
-        Caravan3.setBounds(347, 50, 100, 150);
-        frame.getContentPane().add(Caravan3);
-
-        Card1 = new JButton("New button");
-        Card1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                ClickedCard = PlayerObj.Hand.get(0);
-            }
-        });
-        Card1.setBounds(55, 257, 100, 150);
-        frame.getContentPane().add(Card1);
-
-        Card2 = new JButton("New button");
-        Card2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ClickedCard = PlayerObj.Hand.get(1);
-            }
-        });
-        Card2.setBounds(203, 257, 100, 150);
-        frame.getContentPane().add(Card2);
-
-        Card4 = new JButton("New button");
-        Card4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ClickedCard = PlayerObj.Hand.get(3);
-            }
-        });
-        Card4.setBounds(125, 418, 100, 150);
-        frame.getContentPane().add(Card4);
-
-        Card3 = new JButton("New button");
-        Card3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ClickedCard = PlayerObj.Hand.get(2);
-            }
-        });
-        Card3.setBounds(362, 257, 100, 150);
-        frame.getContentPane().add(Card3);
-
-        Card5 = new JButton("New button");
-        Card5.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ClickedCard = PlayerObj.Hand.get(4);
-            }
-        });
-        Card5.setBounds(282, 418, 100, 150);
-        frame.getContentPane().add(Card5);
-
-        lblCaravanTotal1 = new JLabel("New label");
-        lblCaravanTotal1.setBounds(26, 209, 135, 14);
-        frame.getContentPane().add(lblCaravanTotal1);
-
-        lblCaravanTotal2 = new JLabel("New label");
-        lblCaravanTotal2.setBounds(189, 209, 148, 14);
-        frame.getContentPane().add(lblCaravanTotal2);
-
-        lblCaravanTotal3 = new JLabel("New label");
-        lblCaravanTotal3.setBounds(347, 209, 138, 14);
-        frame.getContentPane().add(lblCaravanTotal3);
-
-        lblCaravanDirecttion1 = new JLabel("New label");
-        lblCaravanDirecttion1.setBounds(26, 227, 135, 14);
-        frame.getContentPane().add(lblCaravanDirecttion1);
-
-        lblCaravanDirecttion2 = new JLabel("New label");
-        lblCaravanDirecttion2.setBounds(189, 227, 148, 14);
-        frame.getContentPane().add(lblCaravanDirecttion2);
-
-        lblCaravanDirecttion3 = new JLabel("New label");
-        lblCaravanDirecttion3.setBounds(347, 227, 138, 14);
-        frame.getContentPane().add(lblCaravanDirecttion3);
-
-        lblTotalValue = new JLabel("Total Value: ");
-        lblTotalValue.setBounds(50, 25, 73, 14);
-        frame.getContentPane().add(lblTotalValue);
-
-        lblCurrentPlayer = new JLabel("");
-        lblCurrentPlayer.setBounds(223, 11, 46, 14);
-        frame.getContentPane().add(lblCurrentPlayer);
-
-        JButton btnRedrawHand = new JButton("Re-Draw Hand");
-        btnRedrawHand.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                PlayerObj.RedrawHand();
-                SetHand();
-            }});
-        btnRedrawHand.setBounds(198, 579, 123, 23);
-        frame.getContentPane().add(btnRedrawHand);
-    }
-
 */
-//

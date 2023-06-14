@@ -7,10 +7,9 @@ public class Player {
 	public List<Card> Hand = new ArrayList<Card>();
 	public Deck PlayerDeck = new Deck();
 
-	public boolean PlayerHasWon = false;
-	public boolean PlayerHasLost = false;
+	public boolean isAI;
+	public boolean isCurrent;
 
-	public int TotalPlayerValue = 0;
 
 	public Caravan PlayerCaravan1 = new Caravan();
 	public Caravan PlayerCaravan2 = new Caravan();
@@ -54,63 +53,87 @@ public class Player {
 		}
 		}
 	}
-	public void PlayCard(Card currentcard, int caravannum){
-		switch (caravannum){
-			case 1:
-				PlayerCaravan1.AddToCaravan(currentcard);
-				DrawACard(currentcard);
-				break;
-			case 2:
-				PlayerCaravan2.AddToCaravan(currentcard);
-				DrawACard(currentcard);
-				break;
-			case 3:
-				PlayerCaravan3.AddToCaravan(currentcard);
-				DrawACard(currentcard);
-				break;
+
+	/**
+	 * part of playing the cards to the caravans that the GUI interacts with.
+	 * @param currentcard
+	 * @param caravannum
+	 * @return
+	 */
+	public boolean PlayCard(Card currentcard, int caravannum) { //the card check isn't working its not letting me play cards that sould be playable.
+		if (!(currentcard == null)) {
+
+			switch (caravannum) {
+				case 1:
+					if (PlayerCaravan1.AddToCaravan(currentcard)) {
+						DrawACard(currentcard);
+						return true;
+					}
+				case 2:
+					if (PlayerCaravan2.AddToCaravan(currentcard)) {
+						DrawACard(currentcard);
+						return true;
+					}
+				case 3:
+					if (PlayerCaravan3.AddToCaravan(currentcard)) {
+						DrawACard(currentcard);
+						return true;
+					}
+			}
+			return false;
 		}
-
+		return false;
 	}
-
 	public void SetGameUp() {
 		CreateDeck(30);
 		FillHand();
 	}
 
+	public boolean DumpCaravan(int caravannum){
+		switch (caravannum){
+			case 1:
+				PlayerCaravan1 = new Caravan();
+				return true;
+			case 2:
+				PlayerCaravan2 = new Caravan();
+				return true;
+			case 3:
+				PlayerCaravan3 = new Caravan();
+				return true;
+		}return false;
+	}
+
 	/**
-	 * this is wrong, it is not how caravan works and this should be moved to the caravine pile itself to account for if a pile is sold or under/over burdened
-	 * 
+	 * Fairly simple AI way to play the the game.
+	 * get the biggest value non-face card and try to play it.
+	 * if you can't get rid of the card and try again.
 	 * @return
 	 */
-	/**public int CheckWinLoss() {
+	public boolean PlayAI(){
+		Card largestvaluecard = null;
+		int largestvalue = 0;
 
-		int WinNeutralLoss = 0; // -1 means lost, 0 means fine, 1 means won
 
-		if (PlayerCaravan1.CheckWin()) {
-			WinNeutralLoss = 1;
-			TotalPlayerValue += PlayerCaravan1.getTotalValue();
-
-		} else if (PlayerCaravan2.CheckWin()) {
-			TotalPlayerValue += PlayerCaravan2.getTotalValue();
-			WinNeutralLoss = 1;
-
-		} else if (PlayerCaravan3.CheckWin()) {
-			TotalPlayerValue += PlayerCaravan2.getTotalValue();
-			WinNeutralLoss = 1;
-
-			WinNeutralLoss = 1;
-
-		} else if (PlayerCaravan1.CheckLoss() || PlayerCaravan2.CheckLoss() || PlayerCaravan3.CheckLoss()) {
-			PlayerHasLost = true;
-			WinNeutralLoss = -1;
-		} else if (PlayerCaravan1.CheckWin() && PlayerCaravan2.CheckWin() && PlayerCaravan3.CheckWin()) {
-			PlayerHasWon = true;
-		} else {
-			WinNeutralLoss = 0;
+		for(Card c : Hand){
+			if(!(PlayerCaravan1.CheckFace(c))){
+				if(c.getCardType() > largestvalue){
+					largestvalue = c.getCardType();
+					largestvaluecard = c;
+				}
+			}
+		}
+		if(largestvaluecard == null){
+			DrawACard(Hand.get(0)); // if all the cards in the hand are faces just draw a new card.
+			return true;
 		}
 
-		return WinNeutralLoss;
-
-	}*/
+		for(int i = 1; i < 4;  i++){
+			if(PlayCard(largestvaluecard,i)){
+				return true;
+			}
+		}
+		DrawACard(largestvaluecard);
+		return false;
+	}
 
 }

@@ -6,7 +6,7 @@ import java.util.Stack;
 public class Deck {
 //stack of randomly generated cards
 	public Stack<Card> Deck = new Stack<>();
-	private final String Suit[] = { "H", "D", "C", "S" };
+	private final String Suit[] = { "hearts", "diamonds", "clubs", "spades" };
 
 
 	/**
@@ -35,7 +35,7 @@ public class Deck {
 			}
 
 		}
-		Card joker = new Card("Joker",14);
+		Card joker = new Card("joker",14);
 		realdeck.add(joker);
 		realdeck.add(joker);
 		return realdeck;
